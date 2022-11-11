@@ -39,6 +39,16 @@ public class PlayerManager {
         musicManager.scheduler.queueNext();
     }
 
+    public void leaveBot(TextChannel textChannel){
+        final GuildManager musicManager = this.getMusicManager(textChannel.getGuild());
+        musicManager.scheduler.stopAction();
+    }
+
+    public void pause(TextChannel textChannel){
+        final GuildManager musicManager = this.getMusicManager(textChannel.getGuild());
+        musicManager.scheduler.setStatus();
+    }
+
     public void getList(TextChannel textChannel) {
         final GuildManager musicManager = this.getMusicManager(textChannel.getGuild());
         ArrayList<String> list=musicManager.scheduler.queueDisplay();
