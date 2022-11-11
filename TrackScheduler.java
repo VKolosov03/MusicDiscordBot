@@ -30,10 +30,17 @@ public class TrackScheduler extends AudioEventAdapter {
             this.textChannel.sendMessage("Now playing: " + track.getInfo().title).queue();
             this.audioPlayer.startTrack(track, false);
         }
-        else {
-            audioPlayer.destroy();
-            textChannel.getGuild().getAudioManager().closeAudioConnection();
-        }
+        else stopAction();
+    }
+
+    public void stopAction(){
+        audioPlayer.destroy();
+        textChannel.getGuild().getAudioManager().closeAudioConnection();
+    }
+
+    public void setStatus() {
+        if(!this.audioPlayer.isPaused()) this.audioPlayer.setPaused(true);
+        else this.audioPlayer.setPaused(false);
     }
 
     public ArrayList<String> queueDisplay() {

@@ -24,11 +24,15 @@ public class CommandHandler extends ListenerAdapter {
         }
         if(event.getName().equals("skip")){
             PlayerManager.getINSTANCE().skipAndPlay(event.getChannel().asTextChannel());
-
         }
         if(event.getName().equals("list")){
             PlayerManager.getINSTANCE().getList(event.getChannel().asTextChannel());
-
+        }
+        if(event.getName().equals("leave")){
+            PlayerManager.getINSTANCE().leaveBot(event.getChannel().asTextChannel());
+        }
+        if(event.getName().equals("poc")){
+            PlayerManager.getINSTANCE().pause(event.getChannel().asTextChannel());
         }
     }
 
@@ -40,9 +44,11 @@ public class CommandHandler extends ListenerAdapter {
     public void onGuildReady(GuildReadyEvent event) {
         List<CommandData> commandData = new ArrayList<>();
         OptionData option1 = new OptionData(OptionType.STRING, "link", "music link");
-        commandData.add(Commands.slash("play", "dich").addOptions(option1));
+        commandData.add(Commands.slash("play", "play track").addOptions(option1));
         commandData.add(Commands.slash("skip", "skip track"));
         commandData.add(Commands.slash("list", "get list"));
+        commandData.add(Commands.slash("leave", "delete bot"));
+        commandData.add(Commands.slash("poc", "pause or continue"));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 }
