@@ -23,7 +23,6 @@ public class App {
     public static void main(String[] args) throws LoginException{
         try {
             App bot= new App();
-            double e= .1E-1;
         }catch (LoginException e){
             System.out.println("Error");
         }
