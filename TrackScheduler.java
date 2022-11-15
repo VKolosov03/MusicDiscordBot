@@ -3,19 +3,20 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TrackScheduler extends AudioEventAdapter {
-    public final AudioPlayer audioPlayer;
-    public final BlockingQueue<AudioTrack> queue;
-    private TextChannel textChannel;
+    public final AudioPlayer audioPlayer; // object for tracks control
+    public final BlockingQueue<AudioTrack> queue; // tracks queue
+    private TextChannel textChannel; // Server text channel
+
     public TrackScheduler(AudioPlayer audioPlayer){
         this.audioPlayer=audioPlayer;
         this.queue = new LinkedBlockingQueue<>();
     }
+    /* Add new track to the list(play if this is the only song) */
     public void queueAdd(AudioTrack track, TextChannel textChannel){
         this.textChannel=textChannel;
         if(this.queue.isEmpty() && audioPlayer.getPlayingTrack()==null) this.textChannel.sendMessage("Now playing: "+track.getInfo().title).queue();
@@ -24,6 +25,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
+    /* Start next track in list(leave if list is empty) */
     public void queueNext() {
         final AudioTrack track = this.queue.poll();
         if(track!=null) {
@@ -33,16 +35,19 @@ public class TrackScheduler extends AudioEventAdapter {
         else stopAction();
     }
 
+    /* Leave voice channel */
     public void stopAction(){
         audioPlayer.destroy();
         textChannel.getGuild().getAudioManager().closeAudioConnection();
     }
 
-    public void setStatus() {
-        if(!this.audioPlayer.isPaused()) this.audioPlayer.setPaused(true);
-        else this.audioPlayer.setPaused(false);
+    /* Set pause or continue */
+    public boolean setStatus() {
+        this.audioPlayer.setPaused(!this.audioPlayer.isPaused());
+        return this.audioPlayer.isPaused();
     }
 
+    /* Return tracks list */
     public ArrayList<String> queueDisplay() {
         ArrayList<String> list = new ArrayList<>();
         for(AudioTrack track: this.queue) {
@@ -51,6 +56,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return list;
     }
 
+    /* Process track ending(works automatically) */
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if(endReason.mayStartNext) this.queueNext();
