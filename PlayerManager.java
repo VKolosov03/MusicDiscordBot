@@ -63,7 +63,6 @@ public class PlayerManager {
         String text = "Next songs:\n";
         if(list.size()==0) return "List is empty";
         for (int i = 0; i < list.size(); i++) text = text + (i + 1) + ". " + list.get(i) + "\n";
-        textChannel.sendMessage(text).queue();
         return text;
     }
 

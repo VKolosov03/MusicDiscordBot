@@ -16,14 +16,15 @@ public class CommandHandler extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if(event.getName().equals("play")){
-            if(event.getMember().getVoiceState().getChannel()!=null) {
+            if(event.getMember().getVoiceState().getChannel()!=null && event.getOption("link")!=null) {
                 final AudioManager audioManager = event.getGuild().getAudioManager();
                 String linkOption = event.getOption("link").getAsString();
                 audioManager.openAudioConnection(event.getMember().getVoiceState().getChannel());
                 String link = String.join(" ", linkOption);
                 PlayerManager.getINSTANCE().loadAndPlay(event, link);
             }
-            else event.reply("User, please connect to voice channel").queue();
+            else if(event.getMember().getVoiceState().getChannel()==null) event.reply("User, please connect to voice channel").queue();
+            else if(event.getOption("link")==null) event.reply("There's no link").queue();
         }
         // Check if `play` was activated
         else if(event.getGuild().getAudioManager().isConnected()){
