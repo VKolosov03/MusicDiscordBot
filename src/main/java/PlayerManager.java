@@ -19,7 +19,7 @@ public class PlayerManager {
     private final Map<Long, GuildManager> musicManager;
     private final AudioPlayerManager manager;
 
-    public PlayerManager(){
+    private PlayerManager(){
         this.musicManager = new HashMap<>();
         this.manager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(this.manager);
@@ -51,7 +51,6 @@ public class PlayerManager {
     /* Set track status(pause, continue) */
     public String pause(TextChannel textChannel){
         final GuildManager musicManager = this.getMusicManager(textChannel.getGuild());
-        musicManager.scheduler.setStatus();
         if(musicManager.scheduler.setStatus()) return "Track paused";
         return "Track continued";
     }
